@@ -25,6 +25,8 @@ def handle_response():
     while True:
         data = my_response_queue.get()
         data = dict2pb(spy_pb2.Response, data)
+        if data.type != 101:
+            print(data)
         if data.type == PROFESSIONAL_KEY:
             if not data.code:
                 logger.warning(data.message)
@@ -43,6 +45,7 @@ def handle_response():
             chat_message = spy_pb2.ChatMessage()
             chat_message.ParseFromString(data.bytes)
             for message in chat_message.message:
+                # print(message)
                 _type = message.type  # 消息类型 1.文本|3.图片...自行探索
                 _from = message.wxidFrom.str  # 消息发送方
                 _to = message.wxidTo.str  # 消息接收方
@@ -59,8 +62,9 @@ def handle_response():
                 timestamp = message.timestamp  # 消息时间戳
                 if _type == 1:  # 文本消息
                     print(_from, _to, _from_group_member, content)
-                    if _to == "filehelper":
-                        spy.send_text("filehelper", "Hello PyWeChatSpy3.0\n" + content)
+                    if _from in ["wxid_s9b5ktil24qm21", "21765017688@chatroom"]:
+                        print("tootototototo")
+                        spy.send_text(_from, f"@abc_def Hello PyWeChatSpy3.0\n" + content)
                 elif _type == 3:  # 图片消息
                     break
                     # file_path = message.file
@@ -98,6 +102,7 @@ def handle_response():
             if data.code:
                 contacts_list = spy_pb2.Contacts()
                 contacts_list.ParseFromString(data.bytes)
+                groups = list()
                 for contact in contacts_list.contactDetails:  # 遍历联系人列表
                     wxid = contact.wxid.str  # 联系人wxid
                     nickname = contact.nickname.str  # 联系人昵称
@@ -203,7 +208,7 @@ def dict2pb(cls, adict, strict=False):
     return obj
 
 # 服务端推送消息的ip和端口
-msg_server_address = "tcp://127.0.0.1:5557"
+msg_server_address = "tcp://47.98.182.74:21119"
 
 def accept_data(my_queue):
     puller = context.socket(zmq.PULL)
