@@ -21,6 +21,8 @@ import random
 
 from configs.settings import REDIS_IP, REDIS_PASSWORD, redis_client, XIAOICE_PHONE, XIAOICE_PASSWORD, XIAOICE_LOGIN_URL, \
     XIAOICE_SEND_MESSAGE_URL, XIAOICE_CROSS_SITE_COLLECTOR_URL, XIAOICE_GET_BATCH_URL
+# from rpc_client_tools import RPCProxy
+from utils.send_message import send_message
 
 headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36 Edg/93.0.961.52",
@@ -28,7 +30,7 @@ headers = {
 }
 # init_url = "https://ux-plus.xiaoice.com/virtualgirlfriend?feid=81dbe420879b4a6781f52e883778d226&ftid=02803cfc4702ce53789cdfca9113fd4e"
 session = requests.session()
-
+# spy = RPCProxy()
 
 # session.get(init_url, headers=headers)
 
@@ -78,18 +80,21 @@ def get_response(msg):
 
 
 def get_xiaoice_init_url():
-    init_url = ""
-    redis_client.set("init_url_status", 1)
-    from example_rpc_client import spy
-    spy.send_text("gh_ab0072172f2d", "虚拟女友")
-    i = 0
-    while i < 3:
-        time.sleep(2)
-        status = redis_client.get("init_url_status")
-        if status == "1":
+    init_url = redis_client.get("xiaoice_init_url")
+    if not init_url:
+        # redis_client.set("init_url_status", 0)
+        # spy.send_text("gh_ab0072172f2d", "虚拟女友")
+        send_message("gh_ab0072172f2d", "虚拟女友")
+        i = 0
+        while i < 3:
+            time.sleep(2)
+            # status = redis_client.get("init_url_status")
+            # if status == "1":
             init_url = redis_client.get("xiaoice_init_url")
-            break
-        i += 1
+            if init_url:
+                send_message("gh_ab0072172f2d", "虚拟女友")
+                break
+            i += 1
     return init_url
 
 
@@ -102,6 +107,7 @@ def xiaoice_init(init_url):
     if not init_match:
         print("init xiaoice failed")
         return False
+    print("success init xiaoice")
 
     auth_url = init_text[init_match.start() + 18: init_match.end() - 7]
     auth_res = session.get(auth_url, headers=headers)
@@ -120,6 +126,7 @@ def xiaoice_init(init_url):
     print(data)
     login_res = session.post(XIAOICE_LOGIN_URL, headers=headers, data=data)
     if login_res.status_code == 200:
+        print("success auth")
         init_auth_url = login_res.json()['redirect'].replace("\"", "")
         session.get(init_auth_url, headers=headers)
 
@@ -160,6 +167,7 @@ def xiaoice_login():
     if not init_url:
         print("get init url failed")
         return False
+    print("success get init_url: ", init_url)
     return xiaoice_init(init_url)
 
 
@@ -190,14 +198,18 @@ def get_xiaoice_response(msg):
                 if not message:
                     message = "二猫都不知道回你什么好了(＃｀д´)ﾉ"
                 break
-            elif res.status_code == 401:
+            # elif res.status_code == 401:
+            else:
                 xiaoice_login()
                 i += 1
-            else:
-                break
+                # print(res.status_code)
+                # break
         except Exception as ex:
             print(ex)
             break
+    if message is None:
+        print("xiaoice retry failed")
+    print(message)
     return message
 
 
