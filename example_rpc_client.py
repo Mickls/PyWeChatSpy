@@ -11,6 +11,7 @@ import logging
 from queue import Queue
 
 from utils.message import message_processing
+from configs.settings import spy
 
 contact_list = []
 chatroom_list = []
@@ -23,6 +24,7 @@ sh = logging.StreamHandler()
 sh.setFormatter(formatter)
 sh.setLevel(logging.INFO)
 logger.addHandler(sh)
+
 
 def handle_response():
     while True:
@@ -168,6 +170,7 @@ def handle_response():
         else:
             print(data)
 
+
 # dict格式转pb
 def dict2pb(cls, adict, strict=False):
     """
@@ -211,8 +214,10 @@ def dict2pb(cls, adict, strict=False):
                 setattr(obj, field.name, cur_value)
     return obj
 
+
 # 服务端推送消息的ip和端口
 msg_server_address = "tcp://47.98.182.74:21119"
+
 
 def accept_data(my_queue):
     puller = context.socket(zmq.PULL)
@@ -223,10 +228,10 @@ def accept_data(my_queue):
         # 存到队列里
         my_queue.put(data)
 
+
 # 启动线程接收来自服务端的消息
-t = Thread(target=accept_data, args=(my_response_queue, ))
+t = Thread(target=accept_data, args=(my_response_queue,))
 t.start()
 
 # 从队列里获取消息并处理，再通过rpc调用服务端
-spy = RPCProxy()
 handle_response()
