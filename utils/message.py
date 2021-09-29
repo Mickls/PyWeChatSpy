@@ -10,6 +10,7 @@ def message_processing(from_wx, from_group_member, content):
         match = re.search("<url><!\[CDATA\[https://.*\]\]></url>", content)
         if match:
             init_url = content[match.start() + 14: match.end() - 9]
+            print(init_url)
             redis_client.set("xiaoice_init_url", init_url)
             redis_client.set("init_url_status", 1)
         return
