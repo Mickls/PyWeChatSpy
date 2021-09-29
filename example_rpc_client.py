@@ -229,11 +229,10 @@ def accept_data(my_queue):
         my_queue.put(data)
 
 
-if __name__ == '__main__':
-    # 启动线程接收来自服务端的消息
-    t = Thread(target=accept_data, args=(my_response_queue,))
-    t.start()
+# 启动线程接收来自服务端的消息
+t = Thread(target=accept_data, args=(my_response_queue,))
+t.start()
 
-    # 从队列里获取消息并处理，再通过rpc调用服务端
-    spy = RPCProxy()
-    handle_response()
+# 从队列里获取消息并处理，再通过rpc调用服务端
+spy = RPCProxy()
+handle_response()
