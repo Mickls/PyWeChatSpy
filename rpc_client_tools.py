@@ -3,7 +3,7 @@ import pickle
 
 context = zmq.Context()
 # 服务端远程过程调用的ip和端口
-rpc_server_address = "tcp://127.0.0.1:5558"
+rpc_server_address = "tcp://47.98.182.74:5558"
 
 # RPC服务代理类
 class RPCProxy:
