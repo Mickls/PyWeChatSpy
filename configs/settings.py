@@ -1,8 +1,8 @@
 import redis
 
-from rpc_client_tools import RPCProxy
-
-spy = RPCProxy()
+# from rpc_client_tools import RPCProxy
+#
+# spy = RPCProxy()
 REDIS_IP = "81.68.222.63"
 REDIS_PASSWORD = "TowCat"
 redis_client = redis.Redis(host=REDIS_IP, password=REDIS_PASSWORD, port=6379, db=0, decode_responses=True)

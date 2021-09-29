@@ -10,8 +10,7 @@ from rpc_client_tools import *
 import logging
 from queue import Queue
 
-from configs.settings import spy
-from utils.message import message_processing
+from rpc_client_tools import RPCProxy
 
 contact_list = []
 chatroom_list = []
@@ -67,7 +66,8 @@ def handle_response():
                 timestamp = message.timestamp  # 消息时间戳
                 if _type == 1:  # 文本消息
                     print(_from, _to, _from_group_member, content)
-                    message_processing(_from, _from_group_member, content)
+                    from utils.message import message_processing
+                    message_processing(spy, _from, _from_group_member, content)
                     # if _from in ["wxid_s9b5ktil24qm21", "21765017688@chatroom"]:
                     #     print("tootototototo")
                     #     spy.send_text(_from, f"@abc_def Hello PyWeChatSpy3.0\n" + content)
@@ -229,9 +229,11 @@ def accept_data(my_queue):
         my_queue.put(data)
 
 
-# 启动线程接收来自服务端的消息
-t = Thread(target=accept_data, args=(my_response_queue,))
-t.start()
+if __name__ == '__main__':
+    # 启动线程接收来自服务端的消息
+    t = Thread(target=accept_data, args=(my_response_queue,))
+    t.start()
 
-# 从队列里获取消息并处理，再通过rpc调用服务端
-handle_response()
+    # 从队列里获取消息并处理，再通过rpc调用服务端
+    spy = RPCProxy()
+    handle_response()

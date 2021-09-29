@@ -1,12 +1,11 @@
 import re
 
 from configs.settings import redis_client
-from example_rpc_client import spy
 from games.lottery import random_sign
 from utils.chat_api import get_xiaoice_response
 
 
-def message_processing(from_wx, from_group_member, content):
+def message_processing(spy, from_wx, from_group_member, content):
     if from_wx == "gh_ab0072172f2d":
         match = re.search("<url><!\[CDATA\[https://.*\]\]></url>", content)
         if match:
