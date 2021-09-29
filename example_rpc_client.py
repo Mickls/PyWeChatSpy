@@ -11,7 +11,7 @@ import logging
 from queue import Queue
 
 from rpc_client_tools import RPCProxy
-from utils.message import message_processing
+from utils.message import message_processing, xiaoice_message
 
 contact_list = []
 chatroom_list = []
@@ -65,6 +65,7 @@ def handle_response():
                 #     wf.write(image_overview_bytes)
                 overview = message.overview  # 消息缩略
                 timestamp = message.timestamp  # 消息时间戳
+                print(_type)
                 if _type == 1:  # 文本消息
                     print(_from, _to, _from_group_member, content)
                     message_processing(_from, _from_group_member, content)
@@ -81,16 +82,19 @@ def handle_response():
                     pass
                 elif _type == 49:  # XML报文消息
                     print(_from, _to, message.file)
-                    xml = etree.XML(content)
-                    xml_type = xml.xpath("/msg/appmsg/type/text()")[0]
-                    if xml_type == "5":
-                        xml_title = xml.xpath("/msg/appmsg/title/text()")[0]
-                        print(xml_title)
-                        if xml_title == "邀请你加入群聊":
-                            url = xml.xpath("/msg/appmsg/url/text()")[0]
-                            print(url)
-                            time.sleep(1)
-                            spy.get_group_enter_url(_from, url)
+                    # print(content)
+                    if _from == "gh_ab0072172f2d":
+                        xiaoice_message(content)
+                    # xml = etree.XML(content)
+                    # xml_type = xml.xpath("/msg/appmsg/type/text()")[0]
+                    # if xml_type == "5":
+                    #     xml_title = xml.xpath("/msg/appmsg/title/text()")[0]
+                    #     print(xml_title)
+                    #     if xml_title == "邀请你加入群聊":
+                    #         url = xml.xpath("/msg/appmsg/url/text()")[0]
+                    #         print(url)
+                    #         time.sleep(1)
+                    #         spy.get_group_enter_url(_from, url)
                 elif _type == 37:  # 好友申请
                     print("新的好友申请")
                     obj = etree.XML(message.content.str)
