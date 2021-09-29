@@ -19,6 +19,9 @@ def message_processing(from_wx, from_group_member, content):
     if "二猫抽签" in content:
         text = random_sign()
     else:
+        if from_wx.endswith("chatroom"):
+            if "二猫" not in content:
+                return
         text = get_xiaoice_response(content)
         if text is None:
             pass

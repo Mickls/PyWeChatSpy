@@ -30,6 +30,8 @@ headers = {
 }
 # init_url = "https://ux-plus.xiaoice.com/virtualgirlfriend?feid=81dbe420879b4a6781f52e883778d226&ftid=02803cfc4702ce53789cdfca9113fd4e"
 session = requests.session()
+
+
 # spy = RPCProxy()
 
 # session.get(init_url, headers=headers)
@@ -206,7 +208,8 @@ def get_xiaoice_response(msg):
                 # break
         except Exception as ex:
             print(ex)
-            break
+            i += 1
+            # break
     if message is None:
         print("xiaoice retry failed")
     print(message)
