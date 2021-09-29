@@ -11,6 +11,7 @@ import logging
 from queue import Queue
 
 from rpc_client_tools import RPCProxy
+from utils.message import message_processing
 
 contact_list = []
 chatroom_list = []
@@ -66,8 +67,7 @@ def handle_response():
                 timestamp = message.timestamp  # 消息时间戳
                 if _type == 1:  # 文本消息
                     print(_from, _to, _from_group_member, content)
-                    from utils.message import message_processing
-                    message_processing(spy, _from, _from_group_member, content)
+                    message_processing(_from, _from_group_member, content)
                     # if _from in ["wxid_s9b5ktil24qm21", "21765017688@chatroom"]:
                     #     print("tootototototo")
                     #     spy.send_text(_from, f"@abc_def Hello PyWeChatSpy3.0\n" + content)

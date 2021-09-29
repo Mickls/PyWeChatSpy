@@ -21,7 +21,6 @@ import random
 
 from configs.settings import REDIS_IP, REDIS_PASSWORD, redis_client, XIAOICE_PHONE, XIAOICE_PASSWORD, XIAOICE_LOGIN_URL, \
     XIAOICE_SEND_MESSAGE_URL, XIAOICE_CROSS_SITE_COLLECTOR_URL, XIAOICE_GET_BATCH_URL
-from example_rpc_client import spy
 
 headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36 Edg/93.0.961.52",
@@ -81,6 +80,7 @@ def get_response(msg):
 def get_xiaoice_init_url():
     init_url = ""
     redis_client.set("init_url_status", 1)
+    from example_rpc_client import spy
     spy.send_text("gh_ab0072172f2d", "虚拟女友")
     i = 0
     while i < 3:
