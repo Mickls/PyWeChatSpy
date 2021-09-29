@@ -23,8 +23,9 @@ def message_processing(from_wx, from_group_member, content):
             if "二猫" not in content:
                 return
         text = get_xiaoice_response(content)
-        if text is None:
-            pass
+        if not text:
+            text = "喵喵喵？听不懂啦"
+    text.replace("本仙女", "本猫").replace("小冰", "二猫")
     send_message(from_wx, text)
 
 
