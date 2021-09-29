@@ -10,8 +10,8 @@ from rpc_client_tools import *
 import logging
 from queue import Queue
 
-from utils.message import message_processing
 from configs.settings import spy
+from utils.message import message_processing
 
 contact_list = []
 chatroom_list = []
