@@ -10,17 +10,20 @@ from utils.weather_api import get_date, get_weather
 
 def message_processing(spy, from_wx, from_group_member, content):
     # if from_wx.startwith("gh") == "gh_ab0072172f2d":
+    text = ""
     if from_wx.startswith("gh"):
         return
     elif "二猫抽签" in content:
         text = random_sign()
     elif "天气" in content:
-        content = content.replace("@二猫 ", "")
+        content = content.replace("@二猫", "").strip()
         print(content)
         place = get_place_names(content)
         if place:
             # date = get_date(content)
             text = get_weather(place, content)
+        else:
+            return
     else:
         if from_wx.endswith("chatroom"):
             if "二猫" not in content:
