@@ -3,21 +3,24 @@ from lxml import etree
 from configs.settings import redis_client
 from games.lottery import random_sign
 from utils.chat_api import get_xiaoice_response
+from utils.name_recognition import get_place_names
 from utils.send_message import send_message
+from utils.weather_api import get_date, get_weather
 
 
 def message_processing(spy, from_wx, from_group_member, content):
-    if from_wx == "gh_ab0072172f2d":
+    # if from_wx.startwith("gh") == "gh_ab0072172f2d":
+    if from_wx.startswith("gh"):
         return
-    #     match = re.search("<url><!\[CDATA\[https://.*\]\]></url>", content)
-    #     if match:
-    #         init_url = content[match.start() + 14: match.end() - 9]
-    #         print(init_url)
-    #         redis_client.set("xiaoice_init_url", init_url)
-    #         redis_client.set("init_url_status", 1)
-    #     return
-    if "二猫抽签" in content:
+    elif "二猫抽签" in content:
         text = random_sign()
+    elif "天气" in content:
+        content = content.replace("@二猫 ", "")
+        print(content)
+        place = get_place_names(content)
+        if place:
+            # date = get_date(content)
+            text = get_weather(place, content)
     else:
         if from_wx.endswith("chatroom"):
             if "二猫" not in content:
