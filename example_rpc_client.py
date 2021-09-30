@@ -72,7 +72,7 @@ def handle_response():
                     #     print(_from)
                     #     spy.send_text(_from, f"@abc_def Hello PyWeChatSpy3.0\n" + content)
                     #     spy.send_text("gh_ab0072172f2d", "虚拟女友")
-                    message_processing(_from, _from_group_member, content)
+                    message_processing(spy, _from, _from_group_member, content)
                     #     print("tootototototo")
                 elif _type == 3:  # 图片消息
                     break

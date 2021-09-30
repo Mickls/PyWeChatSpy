@@ -909,9 +909,17 @@ def formatCurrency(currencyDigits):
 
 
 def random_sign():
-    index = random.choice(range(100))
-    content = f"""你抽中了第{formatCurrency(index + 1)}签
-    {SIGN[index]}"""
+    is_the_sign = False
+    while True:
+        index = random.choice(range(100))
+        sign = SIGN[index]
+        if "下签" not in sign:
+            break
+        is_the_sign = True
+    the_cat_said = ""
+    if is_the_sign:
+        the_cat_said = "二猫发现你快要抽到下签，已经帮你改运了喵！\n"
+    content = the_cat_said + f"你抽中了第{formatCurrency(index + 1)}签\n{sign}"
     return content
 
 

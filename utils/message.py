@@ -6,7 +6,7 @@ from utils.chat_api import get_xiaoice_response
 from utils.send_message import send_message
 
 
-def message_processing(from_wx, from_group_member, content):
+def message_processing(spy, from_wx, from_group_member, content):
     if from_wx == "gh_ab0072172f2d":
         return
     #     match = re.search("<url><!\[CDATA\[https://.*\]\]></url>", content)
@@ -22,11 +22,11 @@ def message_processing(from_wx, from_group_member, content):
         if from_wx.endswith("chatroom"):
             if "二猫" not in content:
                 return
-        text = get_xiaoice_response(content)
+        text = get_xiaoice_response(spy, content)
         if not text:
             text = "喵喵喵？听不懂啦"
     text.replace("本仙女", "本猫").replace("小冰", "二猫").replace("你女朋友", "你最可爱的小猫咪")
-    send_message(from_wx, text)
+    send_message(spy, from_wx, text)
 
 
 def xiaoice_message(content):

@@ -81,20 +81,20 @@ def get_response(msg):
     return None
 
 
-def get_xiaoice_init_url():
+def get_xiaoice_init_url(spy):
     init_url = redis_client.get("xiaoice_init_url")
     if not init_url:
         # redis_client.set("init_url_status", 0)
         # spy.send_text("gh_ab0072172f2d", "虚拟女友")
-        send_message("gh_ab0072172f2d", "虚拟女友")
+        send_message(spy, "gh_ab0072172f2d", "虚拟女友")
         i = 0
-        while i < 3:
+        while i < 4:
             time.sleep(2)
             # status = redis_client.get("init_url_status")
             # if status == "1":
             init_url = redis_client.get("xiaoice_init_url")
             if init_url:
-                send_message("gh_ab0072172f2d", "虚拟女友")
+                send_message(spy, "gh_ab0072172f2d", "虚拟女友")
                 break
             i += 1
     return init_url
@@ -164,8 +164,8 @@ def xiaoice_init(init_url):
     return False
 
 
-def xiaoice_login():
-    init_url = get_xiaoice_init_url()
+def xiaoice_login(spy):
+    init_url = get_xiaoice_init_url(spy)
     if not init_url:
         print("get init url failed")
         return False
@@ -173,7 +173,7 @@ def xiaoice_login():
     return xiaoice_init(init_url)
 
 
-def get_xiaoice_response(msg):
+def get_xiaoice_response(spy, content):
     """
     微软小冰api调用
     """
@@ -184,7 +184,7 @@ def get_xiaoice_response(msg):
         "PartnerName": "",
         "SubPartnerId": "VirtualGF",
         "Content": {
-            "Text": msg,
+            "Text": content,
             "Metadata": {}
         }
     }
@@ -202,7 +202,7 @@ def get_xiaoice_response(msg):
                 break
             # elif res.status_code == 401:
             else:
-                xiaoice_login()
+                xiaoice_login(spy)
                 i += 1
                 # print(res.status_code)
                 # break
@@ -222,7 +222,7 @@ if __name__ == '__main__':
             msg = input("msg>>>\n")
             if msg == "q":
                 break
-            print(get_xiaoice_response(msg))
+            print(get_xiaoice_response("", msg))
     else:
         print("error")
 # "SessionGuestId"
